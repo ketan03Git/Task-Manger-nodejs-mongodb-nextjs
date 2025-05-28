@@ -1,6 +1,6 @@
 import * as TaskModel from '../../models/taskModel.js';
 
-// Resolvers map GraphQL operations to your database functions
+// maps schema operations to actual JavaScript functions [calls model functions]
 export const resolvers = {
   Query: {
     tasks: (_, { status }) => TaskModel.getTasks(status),

@@ -1,6 +1,7 @@
 import { connectDB } from '../db/mongo.js';
 import { ObjectId } from 'mongodb';
 
+//  MongoDB utility functions used in GraphQL resolver
 export async function getTasks(status) {
   const db = await connectDB();
   const query = status ? { status } : {};
@@ -9,7 +10,7 @@ export async function getTasks(status) {
 
 export async function getTaskById(id) {
   const db = await connectDB();
-  return db.collection('tasks').findOne({ _id: new ObjectId(id) });
+  return db.collection('tasks').findOne({ _id: new ObjectId(String(id)) });
 }
 
 export async function addTask(task) {
@@ -20,6 +21,6 @@ export async function addTask(task) {
 
 export async function updateTaskStatus(id, status) {
   const db = await connectDB();
-  await db.collection('tasks').updateOne({ _id: new ObjectId(id) }, { $set: { status } });
+  await db.collection('tasks').updateOne({ _id: new ObjectId(String(id)) }, { $set: { status } });
   return getTaskById(id);
 }

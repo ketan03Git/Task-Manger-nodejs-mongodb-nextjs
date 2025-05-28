@@ -68,7 +68,7 @@ export default function Home() {
     refetch({ status: value === 'All' ? undefined : value });
   };
 
-  // Add task handler
+  // Add task - handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title) return;
@@ -86,7 +86,6 @@ export default function Home() {
   };
 
     // Update status handler (inline in JSX)
-
  if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-500">Error: {error.message}</div>;
 

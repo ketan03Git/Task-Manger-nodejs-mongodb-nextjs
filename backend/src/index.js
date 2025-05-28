@@ -1,3 +1,5 @@
+// Launches a GraphQL server and connects it to schema and resolver logic
+
 import { ApolloServer } from 'apollo-server';
 import { typeDefs, resolvers } from './graphql/index.js';
 import dotenv from 'dotenv';

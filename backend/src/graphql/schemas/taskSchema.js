@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-// GraphQL schema for tasks
+//GraphQL schema for tasks [Logic defined in resolvers and models]
 export const typeDefs = gql`
   type Task {
     _id: ID!
