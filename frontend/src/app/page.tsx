@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
-import Link from 'next/link';
 
 const GET_TASKS = gql`
   query Tasks($status: String) {
@@ -40,6 +39,7 @@ type Task = {
   title: string;
   status: string;
   dueDate?: string;
+  description?: string;
 };
 
 export default function Home() {
@@ -59,6 +59,8 @@ export default function Home() {
   const [updateTaskStatus] = useMutation(UPDATE_TASK_STATUS, {
     refetchQueries: [{ query: GET_TASKS, variables: { status: statusFilter } }],
   });
+
+const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
     // ...handlers below...
     // Filter handler
@@ -139,30 +141,40 @@ export default function Home() {
 
      {/* Task List */}
      
-      <ul>
-        {data?.tasks.map((task) => (
-          <li key={task._id} className="mb-2 p-2 border rounded flex items-center gap-2">
-            <span className="font-semibold">{task.title}</span>
-            <span className="ml-2 text-gray-500">{task.dueDate}</span>
-            <span className="font-semibold">
-  <Link href={`/tasks/${task._id}`} className="text-blue-600 hover:underline">
-    {task.title}
-  </Link>
-</span>
-            <select
-              className="ml-2 border rounded"
-              value={task.status}
-              onChange={e =>
-                updateTaskStatus({ variables: { id: task._id, status: e.target.value } })
-              }
-            >
-              <option value="Todo">Todo</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Done">Done</option>
-            </select>
-          </li>
-        ))}
-      </ul>
+       <ul>
+  {data?.tasks.map((task) => (
+    <li key={task._id} className="mb-2 p-2 border rounded flex flex-col gap-2">
+      <div className="flex items-center gap-2">
+        <span className="font-semibold">{task.title}</span>
+        <span className="ml-2 text-gray-500">{task.dueDate}</span>
+        <button
+          className="ml-2 px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+          onClick={() => setSelectedTaskId(selectedTaskId === task._id ? null : task._id)}
+        >
+          {selectedTaskId === task._id ? "Hide" : "View"}
+        </button>
+        <select
+          className="ml-2 border rounded"
+          value={task.status}
+          onChange={e =>
+            updateTaskStatus({ variables: { id: task._id, status: e.target.value } })
+          }
+        >
+          <option value="Todo">Todo</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+      </div>
+      {selectedTaskId === task._id && (
+        <div className="mt-2 p-3 border rounded bg-gray-50">
+          <p><strong>Description:</strong> {task.description || "No description"}</p>
+          <p><strong>Status:</strong> {task.status}</p>
+          <p><strong>Due Date:</strong> {task.dueDate || "N/A"}</p>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
     </div>
   );
 }
